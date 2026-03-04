@@ -61,7 +61,7 @@ class SignalrFlutterPlugin : FlutterPlugin, SignalrApi.SignalRHostApi {
                     Handler(Looper.getMainLooper()).post {
                         signalrApi.onNewMessage(methodName, res) { }
                     }
-                },  Dynamic::class.java)
+                },  String::class.java)
             }
 
             connection.connected {
