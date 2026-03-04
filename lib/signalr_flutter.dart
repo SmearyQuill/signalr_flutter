@@ -24,7 +24,7 @@ class SignalR extends SignalrPlatformInterface implements SignalRPlatformApi {
   //---- Callback Methods ----//
   // ------------------------//
   @override
-  Future<void> onNewMessage(String hubName, String message) async {
+  Future<void> onNewMessage(String hubName, dynamic message) async {
     hubCallback?.call(hubName, message);
   }
 
