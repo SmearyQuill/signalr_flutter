@@ -57,7 +57,7 @@ class SignalrFlutterPlugin : FlutterPlugin, SignalrApi.SignalRHostApi {
             hub = connection.createHubProxy(connectionOptions.hubName)
 
             connectionOptions.hubMethods?.forEach { methodName ->
-                hub.on(methodName, { res: Any ->
+                hub.on(methodName, { res: dynamic ->
                     Handler(Looper.getMainLooper()).post {
                         signalrApi.onNewMessage(methodName, res) { }
                     }
