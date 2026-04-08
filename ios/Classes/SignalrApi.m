@@ -333,13 +333,28 @@ NSObject<FlutterMessageCodec> *FLTSignalRPlatformApiGetCodec() {
     completion(nil);
   }];
 }
-- (void)onNewMessageHubName:(NSString *)arg_hubName message:(NSString *)arg_message completion:(void(^)(NSError *_Nullable))completion {
+- (void)onNewMessageHubName:(NSString *)arg_hubName 
+                    message:(id)arg_message 
+                 completion:(void(^)(NSError *_Nullable))completion {
+  
+  // 1. Get the generated codec (crucial for Pigeon compatibility)
+  NSObject<FlutterMessageCodec> *codec = FLTSignalRPlatformApiGetCodec();
+
+  // 2. Initialize the message channel
   FlutterBasicMessageChannel *channel =
     [FlutterBasicMessageChannel
       messageChannelWithName:@"dev.flutter.pigeon.SignalRPlatformApi.onNewMessage"
       binaryMessenger:self.binaryMessenger
-      codec:FLTSignalRPlatformApiGetCodec()      ];  [channel sendMessage:@[arg_hubName ?: [NSNull null], arg_message ?: [NSNull null]] reply:^(id reply) {
-    completion(nil);
+      codec:codec];
+
+  // 3. Send the message. 
+  // By using 'id', if arg_message is a Dictionary/Array, 
+  // the codec will now correctly serialize it for Dart.
+  [channel sendMessage:@[arg_hubName ?: [NSNull null], arg_message ?: [NSNull null]] 
+                 reply:^(id reply) {
+    if (completion) {
+      completion(nil);
+    }
   }];
 }
 @end
