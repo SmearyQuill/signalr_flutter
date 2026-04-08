@@ -50,6 +50,8 @@ public class SwiftSignalrFlutterPlugin: NSObject, FlutterPlugin, FLTSignalRHostA
     if let hubMethods = connectionOptions.hubMethods, !hubMethods.isEmpty {
       hubMethods.forEach { (methodName) in
         hub.on(methodName) { (args) in
+          print("DEBUG: SignalR raw args: \(String(describing: args))")
+          print("DEBUG: SignalR first arg type: \(type(of: args?.first))")
           SwiftSignalrFlutterPlugin.signalrApi?.onNewMessageHubName(methodName, message: args?.first ?? "", completion: { error in })
         }
       }
