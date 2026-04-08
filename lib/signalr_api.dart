@@ -292,6 +292,7 @@ class _SignalRPlatformApiCodec extends StandardMessageCodec {
     switch (type) {
       case 128:       
         return StatusChangeResult.decode(readValue(buffer)!);
+    
       
       default:
 
@@ -306,7 +307,7 @@ abstract class SignalRPlatformApi {
 
   Future<void> onStatusChange(StatusChangeResult statusChangeResult);
 
-  Future<void> onNewMessage(String hubName, dynamic message);
+  Future<void> onNewMessage(String hubName, Object message);
 
   static void setup(SignalRPlatformApi? api, {BinaryMessenger? binaryMessenger}) {
     {
