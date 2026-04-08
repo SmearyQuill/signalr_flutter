@@ -276,10 +276,10 @@ class _SignalRPlatformApiCodec extends StandardMessageCodec {
   const _SignalRPlatformApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is StatusChangeResult) {
+    if (value is ConnectionOptions) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is dynamic) {
+    } else if (value is StatusChangeResult) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
     } else {
@@ -291,8 +291,10 @@ class _SignalRPlatformApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:       
+        return ConnectionOptions.decode(readValue(buffer)!);
+      
+      case 129:       
         return StatusChangeResult.decode(readValue(buffer)!);
-    
       
       default:
 
@@ -341,8 +343,8 @@ abstract class SignalRPlatformApi {
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_hubName = (args[0] as String?);
           assert(arg_hubName != null, 'Argument for dev.flutter.pigeon.SignalRPlatformApi.onNewMessage was null, expected non-null String.');
-          final dynamic? arg_message = (args[1] as dynamic?);
-          assert(arg_message != null, 'Argument for dev.flutter.pigeon.SignalRPlatformApi.onNewMessage was null, expected non-null dynamic.');
+          final Object? arg_message = (args[1] as Object?);
+          assert(arg_message != null, 'Argument for dev.flutter.pigeon.SignalRPlatformApi.onNewMessage was null, expected non-null Object.');
           await api.onNewMessage(arg_hubName!, arg_message!);
           return;
         });

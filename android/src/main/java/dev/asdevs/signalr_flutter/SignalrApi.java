@@ -434,10 +434,10 @@ public class SignalrApi {
     protected Object readValueOfType(byte type, @NonNull ByteBuffer buffer) {
       switch (type) {
         case (byte)128:         
-          return StatusChangeResult.fromList((ArrayList<Object>) readValue(buffer));
+          return ConnectionOptions.fromList((ArrayList<Object>) readValue(buffer));
         
         case (byte)129:         
-          return dynamic.fromList((ArrayList<Object>) readValue(buffer));
+          return StatusChangeResult.fromList((ArrayList<Object>) readValue(buffer));
         
         default:        
           return super.readValueOfType(type, buffer);
@@ -446,13 +446,13 @@ public class SignalrApi {
     }
     @Override
     protected void writeValue(@NonNull ByteArrayOutputStream stream, Object value)     {
-      if (value instanceof StatusChangeResult) {
+      if (value instanceof ConnectionOptions) {
         stream.write(128);
-        writeValue(stream, ((StatusChangeResult) value).toList());
+        writeValue(stream, ((ConnectionOptions) value).toList());
       } else 
-      if (value instanceof dynamic) {
+      if (value instanceof StatusChangeResult) {
         stream.write(129);
-        writeValue(stream, ((dynamic) value).toList());
+        writeValue(stream, ((StatusChangeResult) value).toList());
       } else 
 {
         super.writeValue(stream, value);
@@ -480,7 +480,7 @@ public class SignalrApi {
         callback.reply(null);
       });
     }
-    public void onNewMessage(@NonNull String hubNameArg, @NonNull dynamic messageArg, Reply<Void> callback) {
+    public void onNewMessage(@NonNull String hubNameArg, @NonNull Object messageArg, Reply<Void> callback) {
       BasicMessageChannel<Object> channel =
           new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.SignalRPlatformApi.onNewMessage", getCodec());
       channel.send(new ArrayList<Object>(Arrays.asList(hubNameArg, messageArg)), channelReply -> {

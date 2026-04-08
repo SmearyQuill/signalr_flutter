@@ -257,10 +257,10 @@ void FLTSignalRHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject
 {
   switch (type) {
     case 128:     
-      return [FLTStatusChangeResult fromList:[self readValue]];
+      return [FLTConnectionOptions fromList:[self readValue]];
     
     case 129:     
-      return [FLTdynamic fromList:[self readValue]];
+      return [FLTStatusChangeResult fromList:[self readValue]];
     
     default:    
       return [super readValueOfType:type];
@@ -274,11 +274,11 @@ void FLTSignalRHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject
 @implementation FLTSignalRPlatformApiCodecWriter
 - (void)writeValue:(id)value 
 {
-  if ([value isKindOfClass:[FLTStatusChangeResult class]]) {
+  if ([value isKindOfClass:[FLTConnectionOptions class]]) {
     [self writeByte:128];
     [self writeValue:[value toList]];
   } else 
-  if ([value isKindOfClass:[FLTdynamic class]]) {
+  if ([value isKindOfClass:[FLTStatusChangeResult class]]) {
     [self writeByte:129];
     [self writeValue:[value toList]];
   } else 
@@ -333,7 +333,7 @@ NSObject<FlutterMessageCodec> *FLTSignalRPlatformApiGetCodec() {
     completion(nil);
   }];
 }
-- (void)onNewMessageHubName:(NSString *)arg_hubName message:(FLTdynamic *)arg_message completion:(void(^)(NSError *_Nullable))completion {
+- (void)onNewMessageHubName:(NSString *)arg_hubName message:(id)arg_message completion:(void(^)(NSError *_Nullable))completion {
   FlutterBasicMessageChannel *channel =
     [FlutterBasicMessageChannel
       messageChannelWithName:@"dev.flutter.pigeon.SignalRPlatformApi.onNewMessage"
